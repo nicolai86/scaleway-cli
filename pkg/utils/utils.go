@@ -24,10 +24,8 @@ import (
 
 	"golang.org/x/crypto/ssh"
 
-	"github.com/Sirupsen/logrus"
 	log "github.com/Sirupsen/logrus"
 	"github.com/mattn/go-isatty"
-	"github.com/moul/gotty-client"
 	"github.com/scaleway/scaleway-cli/pkg/sshcommand"
 )
 
@@ -189,40 +187,6 @@ func RemoveDuplicates(elements []string) []string {
 		result = append(result, key)
 	}
 	return result
-}
-
-// AttachToSerial tries to connect to server serial using 'gotty-client' and fallback with a help message
-func AttachToSerial(serverID, apiToken, url string) (*gottyclient.Client, chan bool, error) {
-	gottyURL := os.Getenv("SCW_GOTTY_URL")
-	if gottyURL == "" {
-		gottyURL = url
-	}
-	URL := fmt.Sprintf("%s?arg=%s&arg=%s", gottyURL, apiToken, serverID)
-
-	logrus.Debug("Connection to ", URL)
-	gottycli, err := gottyclient.NewClient(URL)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	if os.Getenv("SCW_TLSVERIFY") == "0" {
-		gottycli.SkipTLSVerify = true
-	}
-
-	gottycli.UseProxyFromEnv = true
-
-	if err = gottycli.Connect(); err != nil {
-		return nil, nil, err
-	}
-	done := make(chan bool)
-
-	fmt.Println("You are connected, type 'Ctrl+q' to quit.")
-	go func() {
-		gottycli.Loop()
-		gottycli.Close()
-		done <- true
-	}()
-	return gottycli, done, nil
 }
 
 func rfc4716hex(data []byte) string {

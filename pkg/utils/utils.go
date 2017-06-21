@@ -26,7 +26,7 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/mattn/go-isatty"
-	"github.com/scaleway/scaleway-cli/pkg/sshcommand"
+	"github.com/nicolai86/scaleway-cli/pkg/sshcommand"
 )
 
 // SpawnRedirection is used to redirects the fluxes

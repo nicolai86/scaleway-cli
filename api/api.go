@@ -19,6 +19,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"golang.org/x/sync/errgroup"
 )
@@ -78,6 +79,9 @@ type ScalewayAPI struct {
 	availabilityAPI string
 
 	Region string
+
+	// Channel to throttle requests to the API
+	throttle <-chan time.Time
 }
 
 // ScalewayAPIError represents a Scaleway API Error
@@ -122,6 +126,7 @@ func New(organization, token, region string, options ...func(*ScalewayAPI)) (*Sc
 		client:    &http.Client{},
 		password:  "",
 		userAgent: "scaleway-sdk",
+		throttle:  time.Tick(time.Minute / 50),
 	}
 	for _, option := range options {
 		option(s)
@@ -159,6 +164,7 @@ func (s *ScalewayAPI) response(method, uri string, content io.Reader) (resp *htt
 	req.Header.Set("X-Auth-Token", s.Token)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("User-Agent", s.userAgent)
+	<-s.throttle // Consume a throttle slot
 	resp, err = s.client.Do(req)
 	return
 }

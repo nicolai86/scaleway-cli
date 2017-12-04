@@ -31,19 +31,16 @@ type Bootscript struct {
 	Default bool `json:"default,omitempty"`
 }
 
-// OneBootscript represents the response of a GET /bootscripts/UUID API call
-type OneBootscript struct {
+type getBootscriptResponse struct {
 	Bootscript Bootscript `json:"bootscript,omitempty"`
 }
 
-// Bootscripts represents a group of  bootscripts
-type Bootscripts struct {
-	// Bootscripts holds  bootscripts of the response
+type getBootscriptsResponse struct {
 	Bootscripts []Bootscript `json:"bootscripts,omitempty"`
 }
 
 // GetBootscripts gets the list of bootscripts from the API
-func (s *API) GetBootscripts() (*[]Bootscript, error) {
+func (s *API) GetBootscripts() ([]Bootscript, error) {
 	query := url.Values{}
 
 	resp, err := s.GetResponsePaginate(s.computeAPI, "bootscripts", query)
@@ -56,12 +53,12 @@ func (s *API) GetBootscripts() (*[]Bootscript, error) {
 	if err != nil {
 		return nil, err
 	}
-	var bootscripts Bootscripts
+	var bootscripts getBootscriptsResponse
 
 	if err = json.Unmarshal(body, &bootscripts); err != nil {
 		return nil, err
 	}
-	return &bootscripts.Bootscripts, nil
+	return bootscripts.Bootscripts, nil
 }
 
 // GetBootscript gets a bootscript from the API
@@ -76,7 +73,7 @@ func (s *API) GetBootscript(bootscriptID string) (*Bootscript, error) {
 	if err != nil {
 		return nil, err
 	}
-	var oneBootscript OneBootscript
+	var oneBootscript getBootscriptResponse
 
 	if err = json.Unmarshal(body, &oneBootscript); err != nil {
 		return nil, err

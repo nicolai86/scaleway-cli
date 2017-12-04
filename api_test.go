@@ -6,11 +6,11 @@ import (
 	"testing"
 )
 
-var client *ScalewayAPI
+var client *API
 
 func TestMain(m *testing.M) {
-	if os.Getenv("SCALEWAY_ORGANIZATION") != "" && os.Getenv("SCALEWAY_ACCESS_KEY") != "" {
-		c, err := New(os.Getenv("SCALEWAY_ORGANIZATION"), os.Getenv("SCALEWAY_ACCESS_KEY"), "par1")
+	if os.Getenv("SCALEWAY_ORGANIZATION") != "" && os.Getenv("SCALEWAY_TOKEN") != "" {
+		c, err := New(os.Getenv("SCALEWAY_ORGANIZATION"), os.Getenv("SCALEWAY_TOKEN"), "par1")
 		if err != nil {
 			log.Printf("Unable to create scaleway client")
 			os.Exit(1)

@@ -6,20 +6,20 @@ import (
 	"net/url"
 )
 
-// ScalewayOrganizationDefinition represents a Scaleway Organization
-type ScalewayOrganizationDefinition struct {
-	ID    string                   `json:"id"`
-	Name  string                   `json:"name"`
-	Users []ScalewayUserDefinition `json:"users"`
+// OrganizationDefinition represents a  Organization
+type OrganizationDefinition struct {
+	ID    string           `json:"id"`
+	Name  string           `json:"name"`
+	Users []UserDefinition `json:"users"`
 }
 
-// ScalewayOrganizationsDefinition represents a Scaleway Organizations
-type ScalewayOrganizationsDefinition struct {
-	Organizations []ScalewayOrganizationDefinition `json:"organizations"`
+// OrganizationsDefinition represents a  Organizations
+type OrganizationsDefinition struct {
+	Organizations []OrganizationDefinition `json:"organizations"`
 }
 
 // GetOrganization returns Organization
-func (s *ScalewayAPI) GetOrganization() (*ScalewayOrganizationsDefinition, error) {
+func (s *API) GetOrganization() (*OrganizationsDefinition, error) {
 	resp, err := s.GetResponsePaginate(AccountAPI, "organizations", url.Values{})
 	if err != nil {
 		return nil, err
@@ -30,7 +30,7 @@ func (s *ScalewayAPI) GetOrganization() (*ScalewayOrganizationsDefinition, error
 	if err != nil {
 		return nil, err
 	}
-	var data ScalewayOrganizationsDefinition
+	var data OrganizationsDefinition
 
 	if err = json.Unmarshal(body, &data); err != nil {
 		return nil, err

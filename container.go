@@ -7,32 +7,32 @@ import (
 	"net/url"
 )
 
-// ScalewayContainerData represents a Scaleway container data (S3)
-type ScalewayContainerData struct {
+// ContainerData represents a  container data (S3)
+type ContainerData struct {
 	LastModified string `json:"last_modified"`
 	Name         string `json:"name"`
 	Size         string `json:"size"`
 }
 
-// ScalewayGetContainerDatas represents a list of Scaleway containers data (S3)
-type ScalewayGetContainerDatas struct {
-	Container []ScalewayContainerData `json:"container"`
+// GetContainerDatas represents a list of  containers data (S3)
+type GetContainerDatas struct {
+	Container []ContainerData `json:"container"`
 }
 
-// ScalewayContainer represents a Scaleway container (S3)
-type ScalewayContainer struct {
-	ScalewayOrganizationDefinition `json:"organization"`
-	Name                           string `json:"name"`
-	Size                           string `json:"size"`
+// Container represents a  container (S3)
+type Container struct {
+	OrganizationDefinition `json:"organization"`
+	Name                   string `json:"name"`
+	Size                   string `json:"size"`
 }
 
-// ScalewayGetContainers represents a list of Scaleway containers (S3)
-type ScalewayGetContainers struct {
-	Containers []ScalewayContainer `json:"containers"`
+// GetContainers represents a list of  containers (S3)
+type GetContainers struct {
+	Containers []Container `json:"containers"`
 }
 
-// GetContainers returns a ScalewayGetContainers
-func (s *ScalewayAPI) GetContainers() (*ScalewayGetContainers, error) {
+// GetContainers returns a GetContainers
+func (s *API) GetContainers() (*GetContainers, error) {
 	resp, err := s.GetResponsePaginate(s.computeAPI, "containers", url.Values{})
 	if err != nil {
 		return nil, err
@@ -43,7 +43,7 @@ func (s *ScalewayAPI) GetContainers() (*ScalewayGetContainers, error) {
 	if err != nil {
 		return nil, err
 	}
-	var containers ScalewayGetContainers
+	var containers GetContainers
 
 	if err = json.Unmarshal(body, &containers); err != nil {
 		return nil, err
@@ -51,8 +51,8 @@ func (s *ScalewayAPI) GetContainers() (*ScalewayGetContainers, error) {
 	return &containers, nil
 }
 
-// GetContainerDatas returns a ScalewayGetContainerDatas
-func (s *ScalewayAPI) GetContainerDatas(container string) (*ScalewayGetContainerDatas, error) {
+// GetContainerDatas returns a GetContainerDatas
+func (s *API) GetContainerDatas(container string) (*GetContainerDatas, error) {
 	resp, err := s.GetResponsePaginate(s.computeAPI, fmt.Sprintf("containers/%s", container), url.Values{})
 	if err != nil {
 		return nil, err
@@ -63,7 +63,7 @@ func (s *ScalewayAPI) GetContainerDatas(container string) (*ScalewayGetContainer
 	if err != nil {
 		return nil, err
 	}
-	var datas ScalewayGetContainerDatas
+	var datas GetContainerDatas
 
 	if err = json.Unmarshal(body, &datas); err != nil {
 		return nil, err

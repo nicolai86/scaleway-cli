@@ -7,19 +7,19 @@ import (
 	"net/url"
 )
 
-// ScalewayPermissions represents the response of GET /permissions
-type ScalewayPermissions map[string]ScalewayPermCategory
+// Permissions represents the response of GET /permissions
+type Permissions map[string]PermCategory
 
-// ScalewayPermCategory represents ScalewayPermissions's fields
-type ScalewayPermCategory map[string][]string
+// PermCategory represents Permissions's fields
+type PermCategory map[string][]string
 
-// ScalewayPermissionDefinition represents the permissions
-type ScalewayPermissionDefinition struct {
-	Permissions ScalewayPermissions `json:"permissions"`
+// PermissionDefinition represents the permissions
+type PermissionDefinition struct {
+	Permissions Permissions `json:"permissions"`
 }
 
 // GetPermissions returns the permissions
-func (s *ScalewayAPI) GetPermissions() (*ScalewayPermissionDefinition, error) {
+func (s *API) GetPermissions() (*PermissionDefinition, error) {
 	resp, err := s.GetResponsePaginate(AccountAPI, fmt.Sprintf("tokens/%s/permissions", s.Token), url.Values{})
 	if err != nil {
 		return nil, err
@@ -30,7 +30,7 @@ func (s *ScalewayAPI) GetPermissions() (*ScalewayPermissionDefinition, error) {
 	if err != nil {
 		return nil, err
 	}
-	var permissions ScalewayPermissionDefinition
+	var permissions PermissionDefinition
 
 	if err = json.Unmarshal(body, &permissions); err != nil {
 		return nil, err

@@ -301,11 +301,15 @@ func (s *API) handleHTTPError(goodStatusCode []int, resp *http.Response) ([]byte
 	}
 	if !good {
 		var scwError APIError
+		scwError.StatusCode = resp.StatusCode
+		if resp.StatusCode == 429 {
+			return nil, scwError
+		}
 
 		if err := json.Unmarshal(body, &scwError); err != nil {
 			return nil, err
 		}
-		scwError.StatusCode = resp.StatusCode
+
 		return nil, scwError
 	}
 	return body, nil

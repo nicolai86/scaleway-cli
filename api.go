@@ -293,22 +293,21 @@ func (s *API) handleHTTPError(goodStatusCode []int, resp *http.Response) ([]byte
 	if resp.StatusCode >= http.StatusInternalServerError {
 		return nil, errors.New(string(body))
 	}
-	good := false
+
 	for _, code := range goodStatusCode {
 		if code == resp.StatusCode {
-			good = true
+			return body, nil
 		}
 	}
-	if !good {
-		var scwError APIError
 
+	var scwError APIError
+	scwError.StatusCode = resp.StatusCode
+	if len(body) > 0 {
 		if err := json.Unmarshal(body, &scwError); err != nil {
 			return nil, err
 		}
-		scwError.StatusCode = resp.StatusCode
-		return nil, scwError
 	}
-	return body, nil
+	return nil, scwError
 }
 
 // SetPassword register the password

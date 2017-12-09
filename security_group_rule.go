@@ -7,8 +7,8 @@ import (
 	"net/url"
 )
 
-// GroupRule definition
-type GroupRule struct {
+// SecurityGroupRule definition
+type SecurityGroupRule struct {
 	Direction    string `json:"direction"`
 	Protocol     string `json:"protocol"`
 	IPRange      string `json:"ip_range"`
@@ -20,18 +20,18 @@ type GroupRule struct {
 	ID           string `json:"id"`
 }
 
-// GetGroupRules represents the response of a GET /_group/{groupID}/rules
-type GetGroupRules struct {
-	Rules []GroupRule `json:"rules"`
+// GetSecurityGroupRules represents the response of a GET /_group/{groupID}/rules
+type GetSecurityGroupRules struct {
+	Rules []SecurityGroupRule `json:"rules"`
 }
 
-// GetGroupRule represents the response of a GET /_group/{groupID}/rules/{ruleID}
-type GetGroupRule struct {
-	Rules GroupRule `json:"rule"`
+// GetSecurityGroupRule represents the response of a GET /_group/{groupID}/rules/{ruleID}
+type GetSecurityGroupRule struct {
+	Rules SecurityGroupRule `json:"rule"`
 }
 
-// NewGroupRule definition POST/PUT request /_group/{groupID}
-type NewGroupRule struct {
+// NewSecurityGroupRule definition POST/PUT request /_group/{groupID}
+type NewSecurityGroupRule struct {
 	Action       string `json:"action"`
 	Direction    string `json:"direction"`
 	IPRange      string `json:"ip_range"`
@@ -39,9 +39,9 @@ type NewGroupRule struct {
 	DestPortFrom int    `json:"dest_port_from,omitempty"`
 }
 
-// GetGroupRules returns a GroupRules
-func (s *API) GetGroupRules(groupID string) (*GetGroupRules, error) {
-	resp, err := s.GetResponsePaginate(s.computeAPI, fmt.Sprintf("_groups/%s/rules", groupID), url.Values{})
+// GetSecurityGroupRules returns a GroupRules
+func (s *API) GetSecurityGroupRules(groupID string) (*GetSecurityGroupRules, error) {
+	resp, err := s.GetResponsePaginate(s.computeAPI, fmt.Sprintf("security_groups/%s/rules", groupID), url.Values{})
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +51,7 @@ func (s *API) GetGroupRules(groupID string) (*GetGroupRules, error) {
 	if err != nil {
 		return nil, err
 	}
-	var GroupRules GetGroupRules
+	var GroupRules GetSecurityGroupRules
 
 	if err = json.Unmarshal(body, &GroupRules); err != nil {
 		return nil, err
@@ -59,9 +59,9 @@ func (s *API) GetGroupRules(groupID string) (*GetGroupRules, error) {
 	return &GroupRules, nil
 }
 
-// GetAGroupRule returns a GroupRule
-func (s *API) GetAGroupRule(groupID string, rulesID string) (*GetGroupRule, error) {
-	resp, err := s.GetResponsePaginate(s.computeAPI, fmt.Sprintf("_groups/%s/rules/%s", groupID, rulesID), url.Values{})
+// GetAGroupRule returns a SecurityGroupRule
+func (s *API) GetASecurityGroupRule(groupID string, rulesID string) (*GetSecurityGroupRule, error) {
+	resp, err := s.GetResponsePaginate(s.computeAPI, fmt.Sprintf("security_groups/%s/rules/%s", groupID, rulesID), url.Values{})
 	if err != nil {
 		return nil, err
 	}
@@ -71,7 +71,7 @@ func (s *API) GetAGroupRule(groupID string, rulesID string) (*GetGroupRule, erro
 	if err != nil {
 		return nil, err
 	}
-	var GroupRules GetGroupRule
+	var GroupRules GetSecurityGroupRule
 
 	if err = json.Unmarshal(body, &GroupRules); err != nil {
 		return nil, err
@@ -80,12 +80,12 @@ func (s *API) GetAGroupRule(groupID string, rulesID string) (*GetGroupRule, erro
 }
 
 type postGroupRuleResponse struct {
-	GroupRule GroupRule `json:"rule"`
+	SecurityGroupRule SecurityGroupRule `json:"rule"`
 }
 
 // PostGroupRule posts a rule on a server
-func (s *API) PostGroupRule(GroupID string, rules NewGroupRule) (*GroupRule, error) {
-	resp, err := s.PostResponse(s.computeAPI, fmt.Sprintf("_groups/%s/rules", GroupID), rules)
+func (s *API) PostSecurityGroupRule(GroupID string, rules NewSecurityGroupRule) (*SecurityGroupRule, error) {
+	resp, err := s.PostResponse(s.computeAPI, fmt.Sprintf("security_groups/%s/rules", GroupID), rules)
 	if err != nil {
 		return nil, err
 	}
@@ -97,12 +97,12 @@ func (s *API) PostGroupRule(GroupID string, rules NewGroupRule) (*GroupRule, err
 	}
 	var res postGroupRuleResponse
 	err = json.Unmarshal(data, &res)
-	return &res.GroupRule, err
+	return &res.SecurityGroupRule, err
 }
 
-// PutGroupRule updates a GroupRule
-func (s *API) PutGroupRule(rules NewGroupRule, GroupID, RuleID string) error {
-	resp, err := s.PutResponse(s.computeAPI, fmt.Sprintf("_groups/%s/rules/%s", GroupID, RuleID), rules)
+// PutGroupRule updates a SecurityGroupRule
+func (s *API) PutSecurityGroupRule(rules NewSecurityGroupRule, GroupID, RuleID string) error {
+	resp, err := s.PutResponse(s.computeAPI, fmt.Sprintf("security_groups/%s/rules/%s", GroupID, RuleID), rules)
 	if err != nil {
 		return err
 	}
@@ -112,9 +112,9 @@ func (s *API) PutGroupRule(rules NewGroupRule, GroupID, RuleID string) error {
 	return err
 }
 
-// DeleteGroupRule deletes a GroupRule
-func (s *API) DeleteGroupRule(GroupID, RuleID string) error {
-	resp, err := s.DeleteResponse(s.computeAPI, fmt.Sprintf("_groups/%s/rules/%s", GroupID, RuleID))
+// DeleteGroupRule deletes a SecurityGroupRule
+func (s *API) DeleteSecurityGroupRule(GroupID, RuleID string) error {
+	resp, err := s.DeleteResponse(s.computeAPI, fmt.Sprintf("security_groups/%s/rules/%s", GroupID, RuleID))
 	if err != nil {
 		return err
 	}

@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/url"
 )
@@ -26,8 +27,8 @@ type Task struct {
 	Progress int `json:"progress,omitempty"`
 }
 
-// OneTask represents the response of a GET /tasks/UUID API call
-type OneTask struct {
+// oneTask represents the response of a GET /tasks/UUID API call
+type oneTask struct {
 	Task Task `json:"task,omitempty"`
 }
 
@@ -56,4 +57,25 @@ func (s *API) GetTasks() (*[]Task, error) {
 		return nil, err
 	}
 	return &tasks.Tasks, nil
+}
+
+// GetTask fetches a specific task
+func (s *API) GetTask(id string) (*Task, error) {
+	query := url.Values{}
+	resp, err := s.GetResponsePaginate(s.computeAPI, fmt.Sprintf("tasks/%s", id), query)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := s.handleHTTPError([]int{http.StatusOK}, resp)
+	if err != nil {
+		return nil, err
+	}
+
+	var t oneTask
+	if err = json.Unmarshal(body, &t); err != nil {
+		return nil, err
+	}
+	return &t.Task, nil
 }

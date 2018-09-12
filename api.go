@@ -20,6 +20,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"golang.org/x/sync/errgroup"
 )
@@ -72,6 +73,9 @@ type API struct {
 	objectstoreAPI string
 
 	Region string
+
+	// Channel to throttle requests to the API
+	throttle <-chan time.Time
 }
 
 // APIError represents a  API Error
@@ -116,6 +120,7 @@ func New(organization, token, region string, options ...func(*API)) (*API, error
 		// internal
 		password:  "",
 		userAgent: "scaleway-sdk",
+		throttle:  time.Tick(time.Minute / 50),
 	}
 	for _, option := range options {
 		option(s)
@@ -153,6 +158,7 @@ func (s *API) response(method, uri string, content io.Reader) (resp *http.Respon
 	req.Header.Set("X-Auth-Token", s.Token)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("User-Agent", s.userAgent)
+	<-s.throttle
 	resp, err = s.Client.Do(req)
 	return
 }

@@ -16,6 +16,7 @@ type SecurityGroup struct {
 	Servers               []ServerRef `json:"servers"`
 	EnableDefaultSecurity bool        `json:"enable_default_security"`
 	OrganizationDefault   bool        `json:"organization_default"`
+	Stateful              bool        `json:"stateful"`
 }
 
 type SecurityGroupRef struct {
@@ -44,6 +45,7 @@ type NewSecurityGroup struct {
 	Name                  string `json:"name"`
 	Description           string `json:"description"`
 	EnableDefaultSecurity bool   `json:"enable_default_security"`
+	Stateful              bool   `json:"stateful"`
 }
 
 // UpdateSecurityGroup definition PUT request /security_groups
@@ -52,6 +54,7 @@ type UpdateSecurityGroup struct {
 	Name                string `json:"name"`
 	Description         string `json:"description"`
 	OrganizationDefault bool   `json:"organization_default"`
+	Stateful            bool   `json:"stateful"`
 }
 
 // DeleteSecurityGroup deletes a SecurityGroup

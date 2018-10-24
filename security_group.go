@@ -17,6 +17,8 @@ type SecurityGroup struct {
 	EnableDefaultSecurity bool        `json:"enable_default_security"`
 	OrganizationDefault   bool        `json:"organization_default"`
 	Stateful              bool        `json:"stateful"`
+	InboundDefaultPolicy  string      `json:"inbound_default_policy"`  //accept, drop
+	OutboundDefaultPolicy string      `json:"outbound_default_policy"` //accept, drop
 }
 
 type SecurityGroupRef struct {
@@ -46,15 +48,19 @@ type NewSecurityGroup struct {
 	Description           string `json:"description"`
 	EnableDefaultSecurity bool   `json:"enable_default_security"`
 	Stateful              bool   `json:"stateful"`
+	InboundDefaultPolicy  string `json:"inbound_default_policy"`
+	OutboundDefaultPolicy string `json:"outbound_default_policy"`
 }
 
 // UpdateSecurityGroup definition PUT request /security_groups
 type UpdateSecurityGroup struct {
-	Organization        string `json:"organization"`
-	Name                string `json:"name"`
-	Description         string `json:"description"`
-	OrganizationDefault bool   `json:"organization_default"`
-	Stateful            bool   `json:"stateful"`
+	Organization          string `json:"organization"`
+	Name                  string `json:"name"`
+	Description           string `json:"description"`
+	OrganizationDefault   bool   `json:"organization_default"`
+	Stateful              bool   `json:"stateful"`
+	InboundDefaultPolicy  string `json:"inbound_default_policy"`
+	OutboundDefaultPolicy string `json:"outbound_default_policy"`
 }
 
 // DeleteSecurityGroup deletes a SecurityGroup

@@ -37,6 +37,11 @@ func TestScalewaAPI_ManageBucket(t *testing.T) {
 	if bucket.NumberOfObjects != 0 || bucket.Size != 0 {
 		t.Errorf("Expected to create a fresh bucket, but got %d items, %d size", bucket.NumberOfObjects, bucket.Size)
 	}
+
+	_, err = client.ListObjects(bucket.Name)
+	if err != nil {
+		t.Fatalf("Expected request to succeed, but didn't: %v", err.Error())
+	}
 }
 
 func TestScalewaAPI_ManageObject(t *testing.T) {
